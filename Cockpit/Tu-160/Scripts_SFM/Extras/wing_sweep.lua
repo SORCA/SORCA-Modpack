@@ -1,7 +1,8 @@
--- Approx. of data provided by https://legendary-aircraft.blogspot.com/2013/03/Konstrukcija-Tu-160.html
--- Takeoff/landing at 20°, 35° subsonic and cruising (930Km/h); 65° over M=1
--- 20°, 35°, ?, ?, 65° are all possible values
--- So, wing sweep value (arg.7) is 0.000 at 20° and 1.000 at 65°
+-- Approx. of data provided by https://en.wikipedia.org/wiki/Sukhoi_Su-24,
+--http://forums.airbase.ru/2007/07/t36166_17--umnye-mysli-pro-su-24.html
+--"16° for take-off and landing, 35° and 45° for cruise at different altitudes, and 69° for minimum aspect ratio and wing area in low-level dashes"
+-- 16°, 36°, 45°, 69° are all possible values
+-- So, wing sweep value (arg.7) is 0.000 at 16° and 1.000 at 69°
 
 -- Declare self variables
 local dev = GetSelf()
@@ -21,19 +22,19 @@ end
 -- Defines how wing sweep animations should work
 function update()
   -- Preparing constants/dependencies
-  local mach = sensor_data:getMachNumber()
+  local mach = sensor_data:getTrueAirSpeed()
   local altG = sensor_data:getRadarAltitude()
   local currentsweep = get_aircraft_draw_argument_value(7)
   local targetsweep = 0
-  local sweepstep = 0.0006
+  local sweepstep = 0.0010
   
   -- Fastest ~1M
-   if mach > .69 and currentsweep < 1.0 then
+   if mach > 293 and currentsweep < 1.0 then
     targetsweep = 1.0
-	-- Subsonic/cruising (<930Km/h)
-   elseif mach > .4 and currentsweep < 0.33 then
-    targetsweep = 0.33
-	-- Takeoff/landing (<400Km/h)
+	--
+   elseif mach > 232.5 and currentsweep < 0.55 then
+    targetsweep = 0.55
+    --
    elseif mach > 0 and currentsweep > 0.0 then
     targetsweep = 0.0
   end

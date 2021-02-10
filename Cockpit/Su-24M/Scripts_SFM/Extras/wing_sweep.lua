@@ -22,25 +22,19 @@ end
 -- Defines how wing sweep animations should work
 function update()
   -- Preparing constants/dependencies
-  local mach = sensor_data:getMachNumber()
+  local mach = sensor_data:getTrueAirSpeed()
   local altG = sensor_data:getRadarAltitude()
   local currentsweep = get_aircraft_draw_argument_value(7)
   local targetsweep = 0
-  local sweepstep = 0.0006
+  local sweepstep = 0.0010
   
   -- Fastest ~1M
-   if mach > .8 and currentsweep < 1.0 then
+   if mach > 293 and currentsweep < 1.0 then
     targetsweep = 1.0
-	-- Very low alt pass
-   elseif altG < 200 and mach > .65 and currentsweep < 1.0 then
-    targetsweep = 1.0
-	-- Subsonic/cruising (45°)
-   elseif mach > .65 and currentsweep < 0.55 then
+	--
+   elseif mach > 232.5 and currentsweep < 0.55 then
     targetsweep = 0.55
-	-- Subsonic/cruising (35°)
-   elseif mach > .32 and currentsweep < 0.38 then
-    targetsweep = 0.38
-	-- Takeoff/landing (<400Km/h)
+    --
    elseif mach > 0 and currentsweep > 0.0 then
     targetsweep = 0.0
   end

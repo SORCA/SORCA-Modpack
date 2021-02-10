@@ -1,7 +1,8 @@
--- Approx. of data provided by https://en.wikipedia.org/wiki/Rockwell_B-1_Lancer and https://fas.org/nuke/guide/usa/bomber/b1b-factbook.pdf
--- Takeoff/landing at 15°, 35° over 0.45M, 55° over 0.55M ; 67.5° over M=0.85 or at low altitudes
--- 15°, 20°, 35°, 45°, 55°, 67.5° are all possible values
--- So, wing sweep value (arg.7) is 0.000 at 15° and 1.000 at 67.5°
+-- Approx. of data provided by https://en.wikipedia.org/wiki/Sukhoi_Su-24,
+--http://forums.airbase.ru/2007/07/t36166_17--umnye-mysli-pro-su-24.html
+--"16° for take-off and landing, 35° and 45° for cruise at different altitudes, and 69° for minimum aspect ratio and wing area in low-level dashes"
+-- 16°, 36°, 45°, 69° are all possible values
+-- So, wing sweep value (arg.7) is 0.000 at 16° and 1.000 at 69°
 
 -- Declare self variables
 local dev = GetSelf()
@@ -21,25 +22,19 @@ end
 -- Defines how wing sweep animations should work
 function update()
   -- Preparing constants/dependencies
-  local mach = sensor_data:getMachNumber()
+  local mach = sensor_data:getTrueAirSpeed()
   local altG = sensor_data:getRadarAltitude()
   local currentsweep = get_aircraft_draw_argument_value(7)
   local targetsweep = 0
-  local sweepstep = 0.0006
+  local sweepstep = 0.0010
   
   -- Fastest ~1M
-   if mach > .85 and currentsweep < 1.0 then
+   if mach > 293 and currentsweep < 1.0 then
     targetsweep = 1.0
-	-- Very low alt pass
-   elseif altG < 200 and mach > .65 and currentsweep < 1.0 then
-    targetsweep = 1.0
-	-- Subsonic/cruising (45°)
-   elseif mach > .55 and currentsweep < 0.57 then
-    targetsweep = 0.57
-	-- Subsonic/cruising (35°)
-   elseif mach > .45 and currentsweep < 0.38 then
-    targetsweep = 0.38
-	-- Takeoff/landing
+	--
+   elseif mach > 232.5 and currentsweep < 0.55 then
+    targetsweep = 0.55
+    --
    elseif mach > 0 and currentsweep > 0.0 then
     targetsweep = 0.0
   end
